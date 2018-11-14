@@ -1,26 +1,58 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import "./App.css";
+import todoList from "./todos.json";
 
-class App extends Component {
+class TodoItem extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+      <li className={this.props.completed ? "completed" : ""}>
+        <div className="view">
+          <input
+            className="toggle"
+            type="checkbox"
+            checked={this.props.completed}
+          />
+          <label>{this.props.title}</label>
+          <button className="destroy" />
+        </div>
+      </li>
+    );
+  }
+}
+
+class TodoList extends Component {
+  render() {
+    return <ul className="todo-list">{this.props.children}</ul>;
+  }
+}
+
+class App extends Component {
+  state = { todos: todoList };
+  render() {
+    return (
+      <section className="todoapp">
+        <header className="header">
+          <h1>todos</h1>
+          <input
+            className="new-todo"
+            placeholder="What needs to be done?"
+            autoFocus
+          />
         </header>
-      </div>
+        <section className="main">
+          <TodoList>
+            {this.state.todos.map(todo => (
+              <TodoItem title={todo.title} completed={todo.completed} />
+            ))}
+          </TodoList>
+        </section>
+        <footer className="footer">
+          <span className="todo-count">
+            <strong>0</strong> item(s) left
+          </span>
+          <button className="clear-completed">Clear completed</button>
+        </footer>
+      </section>
     );
   }
 }
