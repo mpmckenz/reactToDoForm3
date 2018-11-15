@@ -11,9 +11,10 @@ class TodoItem extends Component {
             className="toggle"
             type="checkbox"
             checked={this.props.completed}
+            onClick={this.props.completeTodo}
           />
           <label>{this.props.title}</label>
-          <button className="destroy" />
+          <button className="destroy" onClick={this.props.handleDeleteTodo} />
         </div>
       </li>
     );
@@ -28,6 +29,63 @@ class TodoList extends Component {
 
 class App extends Component {
   state = { todos: todoList };
+
+  handleDeleteCompletedTodos = event => {
+    const newTodos = this.state.todos.filter(todo => {
+      if (todo.completed === true) {
+        return false;
+      }
+      return true;
+    });
+    this.setState({
+      todos: newTodos
+    });
+  };
+
+  handleDeleteTodo = todoIdThatWasClicked => event => {
+    const newTodos = this.state.todos.filter(todo => {
+      if (todo.id === todoIdThatWasClicked) {
+        return false;
+      }
+      return true;
+      //look for matched id todoIdThatWasClicked = todo.id
+    });
+    this.setState({
+      todos: newTodos
+    });
+  };
+
+  handleCompletedTodo = idUserClicked => event => {
+    const newTodos = this.state.todos.map(todo => {
+      if (todo.id === idUserClicked) {
+        todo.completed = !todo.completed;
+      }
+      return todo;
+    });
+
+    this.setState({
+      todos: newTodos
+    });
+  };
+
+  // addNewTodo = event => {
+  //   if (event.keyCode === 13) {
+  //     const newTodos = this.state.todos.slice(0);
+  //     const newTodo = {
+  //       userId: 1,
+  //       id: Math.floor(Math.random() * 10) + 1,
+  //       title: event.target.value,
+  //       completed: false
+  //     };
+  //     // why do we want to generate a random number here?
+  //     newTodos.push(newTodo);
+  //     this.setState({
+  //       todos: newTodos
+  //     });
+  //     console.log(newTodos);
+  //   }
+  // };
+
   render() {
     return (
       <section className="todoapp">
@@ -37,12 +95,18 @@ class App extends Component {
             className="new-todo"
             placeholder="What needs to be done?"
             autoFocus
+            // addNewTodo={this.addNewTodo()}
           />
         </header>
         <section className="main">
           <TodoList>
             {this.state.todos.map(todo => (
-              <TodoItem title={todo.title} completed={todo.completed} />
+              <TodoItem
+                title={todo.title}
+                completed={todo.completed}
+                completeTodo={this.handleCompletedTodo(todo.id)}
+                handleDeleteTodo={this.handleDeleteTodo(todo.id)}
+              />
             ))}
           </TodoList>
         </section>
@@ -50,7 +114,12 @@ class App extends Component {
           <span className="todo-count">
             <strong>0</strong> item(s) left
           </span>
-          <button className="clear-completed">Clear completed</button>
+          <button
+            className="clear-completed"
+            onClick={this.handleDeleteCompletedTodos}
+          >
+            Clear completed
+          </button>
         </footer>
       </section>
     );
