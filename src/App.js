@@ -68,23 +68,22 @@ class App extends Component {
     });
   };
 
-  // addNewTodo = event => {
-  //   if (event.keyCode === 13) {
-  //     const newTodos = this.state.todos.slice(0);
-  //     const newTodo = {
-  //       userId: 1,
-  //       id: Math.floor(Math.random() * 10) + 1,
-  //       title: event.target.value,
-  //       completed: false
-  //     };
-  //     // why do we want to generate a random number here?
-  //     newTodos.push(newTodo);
-  //     this.setState({
-  //       todos: newTodos
-  //     });
-  //     console.log(newTodos);
-  //   }
-  // };
+  addNewTodo = event => {
+    const newTodos = this.state.todos.slice(0);
+    if (event.keyCode === 13) {
+      const newTodo = {
+        userId: 1,
+        id: Math.floor(Math.random() * 314) + 1,
+        title: event.target.value,
+        completed: false
+      };
+      newTodos.push(newTodo);
+      this.setState({
+        todos: newTodos
+      });
+      event.target.value = "";
+    }
+  };
 
   render() {
     return (
@@ -95,7 +94,7 @@ class App extends Component {
             className="new-todo"
             placeholder="What needs to be done?"
             autoFocus
-            // addNewTodo={this.addNewTodo()}
+            onKeyDown={this.addNewTodo}
           />
         </header>
         <section className="main">
